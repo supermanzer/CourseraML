@@ -99,10 +99,12 @@ J = J + (lambda/(2*m)) * (t1Sum + t2Sum);
 % Training set already loaded, so first we set our capital delta vales to 0.
 Delta1 = 0;
 Delta2 = 0;
+
 % Now we enter our for loop
 for i = 1:m
   % Setting input layer 
   a1 = [1; X(i,:)']; % Adding bias unit and setting a1 to our input
+
   % Forward propagation 
   z2 = Theta1 * a1;
   a2 = [1; sigmoid(z2)]; % Adding bias unit
@@ -116,7 +118,7 @@ for i = 1:m
   % bias unit since z2 was calculated from a1, which includes a bias
   % unit.  We'll remove this at the end.
   delta2 = (Theta2_NoBias' * delta3).*sigmoidGradient(z2);
- % delta2 = delta2(2:end); % Removing the bias unit associated value
+  delta2 = delta2(2:end); % Removing the bias unit associated value
   
   % Aggregate our delta values
   Delta2 += (delta3*a2');
