@@ -99,29 +99,48 @@ J = J + (lambda/(2*m)) * (t1Sum + t2Sum);
 % Training set already loaded, so first we set our capital delta vales to 0.
 Delta1 = 0;
 Delta2 = 0;
+
+%============================================================
+% Attempting Fully Vectorized version of the below code
+%============================================================
+%------- Feedforward ------------
+bias = ones(m,1);
+a1=[bias X]; % Adding bias units
+z2 = Theta1*a1';
+a2 = [bias sigmoid(z2)'];
+z3 = Theta2 * a2';
+a3 = sigmoid(z3);
+
+%------- Backprop------------
+delta3 = a3' - Y;
+delta2 = (Theta2_NoBias' * delta3').*sigmoidGradient(z2);
+%delta2 = delta2(:,2:end);
+Delta2 = sum(delta3'*a2);
+Delta1 = sum(delta2*a1);
 % Now we enter our for loop
-for i = 1:m
+%for i = 1:m
   % Setting input layer 
-  a1 = [1; X(i,:)']; % Adding bias unit and setting a1 to our input
+%  a1 = [1; X(i,:)']; % Adding bias unit and setting a1 to our input
+
   % Forward propagation 
-  z2 = Theta1 * a1;
-  a2 = [1; sigmoid(z2)]; % Adding bias unit
-  z3 = Theta2 * a2;
-  a3 = sigmoid(z3); % Here we have our output layer
+ % z2 = Theta1 * a1;
+ % a2 = [1; sigmoid(z2)]; % Adding bias unit
+ % z3 = Theta2 * a2;
+ % a3 = sigmoid(z3); % Here we have our output layer
   
   % Back propagation - 
-  delta3 = a3 - Y(i,:)';
+ % delta3 = a3 - Y(i,:)';
   % We don't check the error associated with our bias units
   % The careful observer will note that we are still including a 
   % bias unit since z2 was calculated from a1, which includes a bias
   % unit.  We'll remove this at the end.
-  delta2 = (Theta2_NoBias' * delta3).*sigmoidGradient(z2);
+ % delta2 = (Theta2_NoBias' * delta3).*sigmoidGradient(z2);
  % delta2 = delta2(2:end); % Removing the bias unit associated value
   
   % Aggregate our delta values
-  Delta2 += (delta3*a2');
-  Delta1 += (delta2*a1');
-endfor
+ % Delta2 += (delta3*a2');
+ % Delta1 += (delta2*a1');
+%endfor
 % Final step to get derivatives, outside of for loop
 Theta1_grad = (1/m) * Delta1;
 Theta2_grad = (1/m) * Delta2;
